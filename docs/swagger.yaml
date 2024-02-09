@@ -1,0 +1,216 @@
+definitions:
+  models.AuthResponse:
+    properties:
+      token:
+        type: string
+    type: object
+  models.ErrorResponse:
+    properties:
+      message:
+        type: string
+    type: object
+  models.Login:
+    properties:
+      email:
+        example: piter.teste@example.com
+        type: string
+      password:
+        example: "123"
+        type: string
+      userName:
+        example: piter
+        type: string
+    type: object
+  models.TokenValidRequest:
+    properties:
+      token:
+        type: string
+    type: object
+  models.TokenValidResponse:
+    properties:
+      isValid:
+        type: boolean
+      token:
+        type: string
+    type: object
+  models.User:
+    properties:
+      email:
+        example: piter.teste@example.com
+        type: string
+      password:
+        example: "123"
+        type: string
+      userName:
+        example: piter
+        type: string
+    type: object
+info:
+  contact: {}
+paths:
+  /api/create-user:
+    post:
+      consumes:
+      - application/json
+      description: Cria um novo usuário com base nos dados fornecidos
+      operationId: create-user
+      parameters:
+      - description: Credenciais de login do usuário
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/models.User'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Usuário criado com sucesso
+          schema:
+            $ref: '#/definitions/models.User'
+        "400":
+          description: Erro de requisição inválida
+          schema:
+            type: string
+        "404":
+          description: Recurso não encontrado
+          schema:
+            type: string
+      summary: Cria um novo usuário
+      tags:
+      - User
+  /api/delete-user/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Deleta um usuário pelo ID
+      operationId: delete-user
+      parameters:
+      - description: ID do usuário a ser deletado
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: Usuário deletado com sucesso
+          schema:
+            type: string
+        "404":
+          description: Usuário não encontrado
+          schema:
+            type: string
+        "500":
+          description: Erro interno do servidor
+          schema:
+            type: string
+      summary: Deleta um usuário
+      tags:
+      - User
+  /api/login:
+    post:
+      consumes:
+      - application/json
+      description: Recebe as credenciais do usuário (user name e senha) e retorna
+        um token JWT se as credenciais forem válidas.
+      operationId: login
+      parameters:
+      - description: Credenciais de login do usuário
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/models.Login'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Token JWT gerado
+          schema:
+            $ref: '#/definitions/models.AuthResponse'
+        "400":
+          description: Erro de requisição inválida
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+        "401":
+          description: Credenciais inválidas
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+      summary: Faz o login do usuário e retorna um token JWT
+      tags:
+      - Auth
+  /api/update-user/{id}:
+    put:
+      consumes:
+      - application/json
+      description: Atualiza um usuário pelo ID
+      operationId: update-user
+      parameters:
+      - description: ID do usuário a ser atualizado
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Dados do usuário a serem atualizados
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/models.User'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Usuário atualizado com sucesso
+          schema:
+            $ref: '#/definitions/models.User'
+        "400":
+          description: Erro de requisição inválida
+          schema:
+            type: string
+        "404":
+          description: Usuário não encontrado
+          schema:
+            type: string
+        "422":
+          description: Entidade não processável
+          schema:
+            type: string
+      summary: Atualiza um usuário
+      tags:
+      - User
+  /api/validate-token:
+    post:
+      consumes:
+      - application/json
+      description: Esse endpoint é responsável por validar o token que foi passado
+        nas requisições das API´s
+      operationId: validate-token
+      parameters:
+      - description: Token a ser validado
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/models.TokenValidRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Token validado com sucesso
+          schema:
+            $ref: '#/definitions/models.TokenValidResponse'
+        "400":
+          description: Erro de requisição inválida
+          schema:
+            type: string
+        "404":
+          description: token inválido
+          schema:
+            type: string
+      summary: Valida o token de usuário
+      tags:
+      - Auth
+swagger: "2.0"

@@ -1,0 +1,14 @@
+version: '3'
+
+services:
+  mysql-container:
+    image: mysql:latest
+    ports:
+      - "3307:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: 3425
+      MYSQL_DATABASE: auth
+      MYSQL_USER: admin
+      MYSQL_PASSWORD: 3425
+    volumes:
+      - /var/lib/mysql
